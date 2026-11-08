@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": { "deploymentEnabled": false },
+  "installCommand": "cd ../.. && npm ci --workspace @portfolio/contracts --workspace apps/web --include-workspace-root",
+  "buildCommand": "cd ../.. && npm run build -w @portfolio/contracts && npm run build -w apps/web"
+}

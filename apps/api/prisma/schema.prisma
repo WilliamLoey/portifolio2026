@@ -1,0 +1,291 @@
+generator client {
+  provider   = "prisma-client-js"
+  // Rust-free client + driver adapter (pg): smaller bundle and faster cold starts on Vercel.
+  engineType = "client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Conventions
+//  • `locale` columns hold one of: en, fr, nl, pt-BR, es (CHECK constraint in SQL).
+//  • Publishable content keeps an editable working copy in its columns and a
+//    `published` JSON snapshot of the public representation. Visitors only ever
+//    read the snapshot, so drafts can be edited safely while a version is live.
+//    published = null → never published / unpublished.
+//  • `sortOrder` is applied immediately (layout, not content).
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+}
+
+/// Opaque session tokens. Only a SHA-256 hash is stored, so a database leak does not leak sessions.
+model Session {
+  id         String    @id @default(cuid())
+  userId     String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  lastSeenAt DateTime  @default(now())
+  ipHash     String?
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  user       AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Fixed-window counters shared by every serverless instance (contact form, login).
+model RateLimitBucket {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
+// ── Media ─────────────────────────────────────────────────────────────────────
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  /// local | vercel-blob | cloudinary
+  provider  String
+  /// Provider-specific key used to delete or replace the file.
+  key       String   @unique
+  url       String
+  mimeType  String
+  bytes     Int
+  width     Int?
+  height    Int?
+  /// { "en": "...", "fr": "..." }
+  alt       Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profiles Profile[]
+  projects Project[]
+}
+
+// ── Profile (single row, id = "main") ─────────────────────────────────────────
+
+model Profile {
+  id              String               @id @default("main")
+  fullName        String
+  email           String
+  location        String
+  timezone        String               @default("Europe/Brussels")
+  openToWork      Boolean              @default(false)
+  resumeUrl       String?
+  /// [{ "name": "Portuguese", "level": "native" }]
+  spokenLanguages Json                 @default("[]")
+  photoId         String?
+  photo           MediaAsset?          @relation(fields: [photoId], references: [id], onDelete: SetNull)
+  translations    ProfileTranslation[]
+  published       Json?
+  publishedAt     DateTime?
+  updatedAt       DateTime             @updatedAt
+}
+
+model ProfileTranslation {
+  profileId    String
+  locale       String
+  role         String
+  headline     String
+  bio          String
+  availability String?
+  profile      Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, locale])
+}
+
+model SocialLink {
+  id        String  @id @default(cuid())
+  kind      String
+  label     String
+  url       String
+  visible   Boolean @default(true)
+  sortOrder Int     @default(0)
+}
+
+// ── Projects ──────────────────────────────────────────────────────────────────
+
+model Category {
+  id           String                @id @default(cuid())
+  slug         String                @unique
+  sortOrder    Int                   @default(0)
+  translations CategoryTranslation[]
+  projects     Project[]
+}
+
+model CategoryTranslation {
+  categoryId String
+  locale     String
+  name       String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, locale])
+}
+
+model Technology {
+  id        String              @id @default(cuid())
+  slug      String              @unique
+  name      String
+  /// language | backend | frontend | data | cloud | devops | testing | ai | other
+  group     String
+  /// Shown in the public Stack section.
+  featured  Boolean             @default(true)
+  sortOrder Int                 @default(0)
+  projects  ProjectTechnology[]
+}
+
+model Project {
+  id           String               @id @default(cuid())
+  slug         String               @unique
+  categoryId   String?
+  category     Category?            @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  coverId      String?
+  cover        MediaAsset?          @relation(fields: [coverId], references: [id], onDelete: SetNull)
+  repoUrl      String?
+  liveUrl      String?
+  year         Int?
+  featured     Boolean              @default(false)
+  showOnHome   Boolean              @default(false)
+  sortOrder    Int                  @default(0)
+  translations ProjectTranslation[]
+  technologies ProjectTechnology[]
+  published    Json?
+  publishedAt  DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([sortOrder])
+}
+
+model ProjectTranslation {
+  projectId String
+  locale    String
+  title     String
+  summary   String
+  body      String
+  role      String?
+  outcome   String?
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, locale])
+}
+
+model ProjectTechnology {
+  projectId    String
+  technologyId String
+  sortOrder    Int        @default(0)
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology   Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, technologyId])
+  @@index([technologyId])
+}
+
+// ── Career ────────────────────────────────────────────────────────────────────
+
+model Experience {
+  id             String                  @id @default(cuid())
+  company        String
+  companyUrl     String?
+  location       String?
+  /// full_time | part_time | contract | freelance | internship
+  employmentType String
+  /// YYYY-MM
+  startDate      String
+  /// YYYY-MM, null = current position
+  endDate        String?
+  sortOrder      Int                     @default(0)
+  translations   ExperienceTranslation[]
+  published      Json?
+  publishedAt    DateTime?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+}
+
+model ExperienceTranslation {
+  experienceId String
+  locale       String
+  role         String
+  summary      String
+  highlights   String[]
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@id([experienceId, locale])
+}
+
+model Education {
+  id           String                 @id @default(cuid())
+  institution  String
+  url          String?
+  startYear    Int
+  endYear      Int?
+  /// in_progress | completed | discontinued
+  status       String
+  sortOrder    Int                    @default(0)
+  translations EducationTranslation[]
+  published    Json?
+  publishedAt  DateTime?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+}
+
+model EducationTranslation {
+  educationId String
+  locale      String
+  degree      String
+  field       String?
+  notes       String?
+  education   Education @relation(fields: [educationId], references: [id], onDelete: Cascade)
+
+  @@id([educationId, locale])
+}
+
+/// Certification names are proper nouns: not translated.
+model Certification {
+  id            String  @id @default(cuid())
+  name          String
+  issuer        String
+  /// YYYY-MM
+  issuedOn      String?
+  credentialId  String?
+  credentialUrl String?
+  visible       Boolean @default(true)
+  sortOrder     Int     @default(0)
+}
+
+// ── Contact ───────────────────────────────────────────────────────────────────
+
+model ContactMessage {
+  id          String    @id @default(cuid())
+  name        String
+  email       String
+  subject     String
+  message     String
+  locale      String    @default("en")
+  /// Salted hash of the sender IP: enough to spot abuse, not to identify anyone.
+  ipHash      String?
+  deliveredAt DateTime?
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([readAt])
+}

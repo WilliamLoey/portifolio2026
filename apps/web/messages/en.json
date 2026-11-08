@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "title": "William Van Loey · Backend-focused Software Engineer",
+    "description": "Backend-focused full-stack engineer in Brussels. APIs, AI and digital process automation. Works in Portuguese, French and English.",
+    "workTitle": "Work",
+    "workDescription": "Projects and case studies by William Van Loey.",
+    "aboutTitle": "About",
+    "aboutDescription": "Background, experience, education and languages of William Van Loey.",
+    "colophonTitle": "How this site is built",
+    "colophonDescription": "Architecture, decisions and stack behind this portfolio and its CMS."
+  },
+  "nav": {
+    "work": "Work",
+    "about": "About",
+    "contact": "Contact",
+    "colophon": "Colophon",
+    "skip": "Skip to content",
+    "menu": "Menu",
+    "close": "Close menu",
+    "language": "Language",
+    "theme": "Switch theme",
+    "home": "Home"
+  },
+  "hero": {
+    "available": "Open to opportunities",
+    "localTime": "Local time",
+    "speaks": "Speaks",
+    "now": "Now",
+    "ctaWork": "See the work",
+    "ctaContact": "Get in touch",
+    "emptyTitle": "Portfolio in preparation",
+    "emptyText": "Content is on its way. In the meantime, you can still send a message."
+  },
+  "work": {
+    "title": "Selected work",
+    "allTitle": "All work",
+    "lead": "Projects described by what they had to solve, how they are built and what came out of them.",
+    "all": "All",
+    "viewAll": "All projects",
+    "empty": "Case studies are being written. Check back soon.",
+    "featured": "Featured",
+    "read": "Read the case study",
+    "code": "Code",
+    "live": "Live",
+    "filter": "Filter by category",
+    "count": "{count, plural, =0 {No projects} one {# project} other {# projects}}"
+  },
+  "project": {
+    "back": "All work",
+    "role": "Role",
+    "year": "Year",
+    "category": "Category",
+    "stack": "Stack",
+    "links": "Links",
+    "outcome": "Outcome",
+    "repository": "Source code",
+    "liveSite": "Live site",
+    "fallback": "This case study is not translated yet. You are reading the {language} version.",
+    "next": "Have a similar problem to solve?",
+    "nextCta": "Let's talk"
+  },
+  "capabilities": {
+    "title": "What I work on",
+    "apis": {
+      "title": "APIs and backend architecture",
+      "text": "Typed contracts, clear boundaries between domain and infrastructure, and services that stay easy to change."
+    },
+    "automation": {
+      "title": "AI and process automation",
+      "text": "Turning repetitive business processes into dependable automated workflows."
+    },
+    "languages": {
+      "title": "Across languages and cultures",
+      "text": "A background in International Relations and daily work in Portuguese, French and English."
+    }
+  },
+  "experience": {
+    "title": "Experience",
+    "present": "Present",
+    "empty": "Experience details are being added.",
+    "types": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "freelance": "Freelance",
+      "internship": "Internship"
+    }
+  },
+  "stack": {
+    "title": "Stack",
+    "lead": "Tools I use to take a product from database to deployment.",
+    "groups": {
+      "language": "Languages",
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "data": "Data",
+      "cloud": "Cloud",
+      "devops": "DevOps",
+      "testing": "Testing",
+      "ai": "AI and automation",
+      "other": "Other"
+    }
+  },
+  "education": {
+    "title": "Education",
+    "status": {
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "discontinued": "Not completed"
+    }
+  },
+  "languages": {
+    "title": "Languages",
+    "levels": {
+      "native": "Native",
+      "full_professional": "Full professional",
+      "professional": "Professional working",
+      "limited": "Limited working",
+      "elementary": "Elementary"
+    }
+  },
+  "certifications": {
+    "title": "Learning and certificates",
+    "credential": "Credential {id}",
+    "verify": "Verify"
+  },
+  "about": {
+    "title": "About",
+    "lead": "Background, experience and the languages I work in."
+  },
+  "contact": {
+    "title": "Let's talk",
+    "lead": "Hiring for a backend or full-stack role, or need a hand with an API or an automation? Write in English, French or Portuguese.",
+    "emailLabel": "Or email",
+    "copy": "Copy",
+    "copied": "Copied",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "success": "Thanks, your message is on its way. I usually reply within two working days.",
+    "error": "The message could not be sent. Try again, or email me directly.",
+    "rateLimited": "Too many messages from this connection. Please try again in a few minutes.",
+    "another": "Send another message",
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "name": { "min": "Enter your name.", "max": "Use 100 characters or fewer." },
+      "email": { "invalid": "Enter a valid email address.", "max": "Use 200 characters or fewer." },
+      "subject": { "min": "Add a short subject.", "max": "Use 150 characters or fewer." },
+      "message": { "min": "Write at least 20 characters.", "max": "Use 5,000 characters or fewer." }
+    }
+  },
+  "colophon": {
+    "title": "How this site is built",
+    "lead": "This portfolio is also a working product: a public site, a REST API and a private CMS. Here is how the parts fit together.",
+    "architectureTitle": "Architecture",
+    "architecture": "A Next.js site and a NestJS API, both on Vercel, with PostgreSQL on Neon and images in object storage. Visitors get pre-rendered pages; the API is only called to rebuild them.",
+    "decisionsTitle": "Decisions",
+    "decisions": {
+      "contract": {
+        "title": "One contract",
+        "text": "Request and response schemas live in a shared Zod package. The API validates with it, the OpenAPI document is generated from it, and the dashboard forms use it."
+      },
+      "publishing": {
+        "title": "Draft and published copies",
+        "text": "Every item keeps an editable draft and a frozen published snapshot. Visitors only read snapshots, so edits are invisible until published."
+      },
+      "revalidation": {
+        "title": "Static pages, refreshed on publish",
+        "text": "Publishing sends a signed request to the site, which rebuilds only the affected pages. No redeploy."
+      },
+      "security": {
+        "title": "Security by default",
+        "text": "Argon2id passwords, opaque server-side sessions in httpOnly cookies, rate limits shared across serverless instances, and uploads checked by their bytes, not their names."
+      },
+      "architecture": {
+        "title": "Clean Architecture, kept small",
+        "text": "Use cases depend on ports. Prisma, storage and email are adapters that can be swapped without touching business rules."
+      },
+      "testing": {
+        "title": "Tested before deploy",
+        "text": "Unit, integration (against a real PostgreSQL) and end-to-end tests run in GitHub Actions before every deployment."
+      }
+    },
+    "stackTitle": "Stack",
+    "source": "Read the source on GitHub",
+    "api": "Browse the API documentation"
+  },
+  "preview": {
+    "banner": "Preview of unpublished changes. Visitors do not see this version.",
+    "back": "Back to the editor"
+  },
+  "notFound": {
+    "title": "This page does not exist",
+    "text": "The link may be outdated, or the project was moved.",
+    "home": "Go to the homepage"
+  },
+  "footer": {
+    "builtWith": "Designed and built by William Van Loey. Next.js, NestJS and PostgreSQL.",
+    "colophon": "How this site is built",
+    "top": "Back to top"
+  }
+}

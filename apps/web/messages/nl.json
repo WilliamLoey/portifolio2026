@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "title": "William Van Loey · Software engineer met focus op backend",
+    "description": "Full-stack engineer met focus op backend in Brussel. API’s, AI en automatisering van digitale processen. Werkt in het Portugees, Frans en Engels.",
+    "workTitle": "Projecten",
+    "workDescription": "Projecten en case studies van William Van Loey.",
+    "aboutTitle": "Over mij",
+    "aboutDescription": "Achtergrond, ervaring, opleiding en talen van William Van Loey.",
+    "colophonTitle": "Hoe deze site gebouwd is",
+    "colophonDescription": "Architectuur, keuzes en tools achter dit portfolio en zijn CMS."
+  },
+  "nav": {
+    "work": "Projecten",
+    "about": "Over mij",
+    "contact": "Contact",
+    "colophon": "Colofon",
+    "skip": "Naar de inhoud",
+    "menu": "Menu",
+    "close": "Menu sluiten",
+    "language": "Taal",
+    "theme": "Thema wisselen",
+    "home": "Home"
+  },
+  "hero": {
+    "available": "Open voor kansen",
+    "localTime": "Lokale tijd",
+    "speaks": "Talen",
+    "now": "Nu",
+    "ctaWork": "Bekijk de projecten",
+    "ctaContact": "Neem contact op",
+    "emptyTitle": "Portfolio in voorbereiding",
+    "emptyText": "De inhoud komt eraan. Je kunt intussen al een bericht sturen."
+  },
+  "work": {
+    "title": "Geselecteerd werk",
+    "allTitle": "Alle projecten",
+    "lead": "Projecten beschreven aan de hand van het probleem, de opbouw en het resultaat.",
+    "all": "Alle",
+    "viewAll": "Alle projecten",
+    "empty": "De case studies worden geschreven. Kom binnenkort terug.",
+    "featured": "Uitgelicht",
+    "read": "Lees de case study",
+    "code": "Code",
+    "live": "Live",
+    "filter": "Filter op categorie",
+    "count": "{count, plural, =0 {Geen projecten} one {# project} other {# projecten}}"
+  },
+  "project": {
+    "back": "Alle projecten",
+    "role": "Rol",
+    "year": "Jaar",
+    "category": "Categorie",
+    "stack": "Technologie",
+    "links": "Links",
+    "outcome": "Resultaat",
+    "repository": "Broncode",
+    "liveSite": "Live site",
+    "fallback": "Deze case study is nog niet vertaald. Je leest de {language} versie.",
+    "next": "Een vergelijkbaar probleem op te lossen?",
+    "nextCta": "Laten we praten"
+  },
+  "capabilities": {
+    "title": "Waar ik aan werk",
+    "apis": {
+      "title": "API’s en backend-architectuur",
+      "text": "Getypeerde contracten, duidelijke grenzen tussen domein en infrastructuur, en services die makkelijk aan te passen blijven."
+    },
+    "automation": {
+      "title": "AI en procesautomatisering",
+      "text": "Repetitieve bedrijfsprocessen omzetten in betrouwbare geautomatiseerde workflows."
+    },
+    "languages": {
+      "title": "Over talen en culturen heen",
+      "text": "Een achtergrond in internationale betrekkingen en dagelijks werk in het Portugees, Frans en Engels."
+    }
+  },
+  "experience": {
+    "title": "Ervaring",
+    "present": "Heden",
+    "empty": "De details over ervaring worden toegevoegd.",
+    "types": {
+      "full_time": "Voltijds",
+      "part_time": "Deeltijds",
+      "contract": "Contract",
+      "freelance": "Freelance",
+      "internship": "Stage"
+    }
+  },
+  "stack": {
+    "title": "Tools",
+    "lead": "Tools waarmee ik een product van database tot deployment breng.",
+    "groups": {
+      "language": "Talen",
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "data": "Data",
+      "cloud": "Cloud",
+      "devops": "DevOps",
+      "testing": "Testen",
+      "ai": "AI en automatisering",
+      "other": "Overig"
+    }
+  },
+  "education": {
+    "title": "Opleiding",
+    "status": {
+      "in_progress": "Lopend",
+      "completed": "Afgerond",
+      "discontinued": "Niet afgerond"
+    }
+  },
+  "languages": {
+    "title": "Talen",
+    "levels": {
+      "native": "Moedertaal",
+      "full_professional": "Volledig professioneel",
+      "professional": "Professioneel",
+      "limited": "Beperkt professioneel",
+      "elementary": "Basis"
+    }
+  },
+  "certifications": {
+    "title": "Leren en certificaten",
+    "credential": "Certificaat {id}",
+    "verify": "Controleren"
+  },
+  "about": {
+    "title": "Over mij",
+    "lead": "Achtergrond, ervaring en de talen waarin ik werk."
+  },
+  "contact": {
+    "title": "Laten we praten",
+    "lead": "Werf je aan voor een backend- of full-stackrol, of heb je hulp nodig bij een API of een automatisering? Schrijf in het Engels, Frans of Portugees.",
+    "emailLabel": "Of per e-mail",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "name": "Naam",
+    "email": "E-mail",
+    "subject": "Onderwerp",
+    "message": "Bericht",
+    "send": "Bericht versturen",
+    "sending": "Bezig met versturen…",
+    "success": "Bedankt, je bericht is onderweg. Ik antwoord meestal binnen twee werkdagen.",
+    "error": "Het bericht kon niet worden verstuurd. Probeer het opnieuw of mail me rechtstreeks.",
+    "rateLimited": "Te veel berichten vanaf deze verbinding. Probeer het over een paar minuten opnieuw.",
+    "another": "Nog een bericht sturen",
+    "honeypot": "Laat dit veld leeg",
+    "errors": {
+      "name": { "min": "Vul je naam in.", "max": "Gebruik maximaal 100 tekens." },
+      "email": { "invalid": "Vul een geldig e-mailadres in.", "max": "Gebruik maximaal 200 tekens." },
+      "subject": { "min": "Voeg een kort onderwerp toe.", "max": "Gebruik maximaal 150 tekens." },
+      "message": { "min": "Schrijf minstens 20 tekens.", "max": "Gebruik maximaal 5.000 tekens." }
+    }
+  },
+  "colophon": {
+    "title": "Hoe deze site gebouwd is",
+    "lead": "Dit portfolio is ook een werkend product: een publieke site, een REST API en een privé-CMS. Zo passen de onderdelen in elkaar.",
+    "architectureTitle": "Architectuur",
+    "architecture": "Een Next.js-site en een NestJS-API, allebei op Vercel, met PostgreSQL bij Neon en afbeeldingen in objectopslag. Bezoekers krijgen vooraf gerenderde pagina’s; de API wordt alleen aangeroepen om ze opnieuw op te bouwen.",
+    "decisionsTitle": "Keuzes",
+    "decisions": {
+      "contract": {
+        "title": "Eén contract",
+        "text": "Request- en responseschema’s staan in een gedeeld Zod-pakket. De API valideert ermee, het OpenAPI-document wordt eruit gegenereerd en de dashboardformulieren gebruiken het."
+      },
+      "publishing": {
+        "title": "Concept en gepubliceerde versie",
+        "text": "Elk item heeft een bewerkbaar concept en een bevroren gepubliceerde kopie. Bezoekers lezen alleen de gepubliceerde versie, dus wijzigingen blijven onzichtbaar tot ze gepubliceerd zijn."
+      },
+      "revalidation": {
+        "title": "Statische pagina’s, vernieuwd bij publicatie",
+        "text": "Publiceren stuurt een ondertekend verzoek naar de site, die alleen de betrokken pagina’s opnieuw opbouwt. Geen nieuwe deploy."
+      },
+      "security": {
+        "title": "Standaard veilig",
+        "text": "Argon2id-wachtwoorden, ondoorzichtige sessies op de server in httpOnly-cookies, rate limits die over serverless-instanties gedeeld worden, en uploads gecontroleerd op hun inhoud in plaats van hun naam."
+      },
+      "architecture": {
+        "title": "Clean Architecture, klein gehouden",
+        "text": "Use cases hangen af van poorten. Prisma, opslag en e-mail zijn adapters die je kunt vervangen zonder de bedrijfsregels aan te raken."
+      },
+      "testing": {
+        "title": "Getest vóór elke deploy",
+        "text": "Unit-, integratie- (tegen een echte PostgreSQL) en end-to-endtests draaien in GitHub Actions vóór elke deployment."
+      }
+    },
+    "stackTitle": "Tools",
+    "source": "Bekijk de broncode op GitHub",
+    "api": "Bekijk de API-documentatie"
+  },
+  "preview": {
+    "banner": "Voorbeeld van niet-gepubliceerde wijzigingen. Bezoekers zien deze versie niet.",
+    "back": "Terug naar de editor"
+  },
+  "notFound": {
+    "title": "Deze pagina bestaat niet",
+    "text": "De link is misschien verouderd, of het project is verplaatst.",
+    "home": "Naar de homepage"
+  },
+  "footer": {
+    "builtWith": "Ontworpen en gebouwd door William Van Loey. Next.js, NestJS en PostgreSQL.",
+    "colophon": "Hoe deze site gebouwd is",
+    "top": "Terug naar boven"
+  }
+}

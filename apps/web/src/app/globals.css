@@ -1,0 +1,209 @@
+@import 'tailwindcss';
+
+/* `dark:` follows data-theme (set before first paint by the inline theme script). */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/*
+ * "Two lights" — the portrait is lit by a cyan and a magenta gel.
+ * Cool marks engineering (code, APIs, links, focus). Warm marks people (contact, languages, status).
+ * Dark is the studio; light is daylight with the gels deepened to ink. Two palettes, not an inversion.
+ */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f1f3f7;
+  --surface: #ffffff;
+  --raised: #e8ebf1;
+  --line: #d9dde6;
+  --line-strong: #b4bccc;
+  --fg: #111421;
+  --muted: #4e5568;
+  --faint: #737a8d;
+  --cool: #1452c2;
+  --warm: #b01f67;
+  --ok: #17784a;
+  --warn: #8f5300;
+  --danger: #b42318;
+  --on-accent: #ffffff;
+  --scrim: rgb(17 20 33 / 0.45);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0c14;
+  --surface: #11141f;
+  --raised: #171b29;
+  --line: #232838;
+  --line-strong: #343b52;
+  --fg: #e7e9f0;
+  --muted: #9097ab;
+  --faint: #6f768d;
+  --cool: #5cb6ff;
+  --warm: #f0559f;
+  --ok: #4cc38a;
+  --warn: #e5a84b;
+  --danger: #ff7a7a;
+  --on-accent: #0a0c14;
+  --scrim: rgb(0 0 0 / 0.6);
+}
+
+/* No JavaScript: follow the OS. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0a0c14;
+    --surface: #11141f;
+    --raised: #171b29;
+    --line: #232838;
+    --line-strong: #343b52;
+    --fg: #e7e9f0;
+    --muted: #9097ab;
+    --faint: #6f768d;
+    --cool: #5cb6ff;
+    --warm: #f0559f;
+    --ok: #4cc38a;
+    --warn: #e5a84b;
+    --danger: #ff7a7a;
+    --on-accent: #0a0c14;
+    --scrim: rgb(0 0 0 / 0.6);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-cool: var(--cool);
+  --color-warm: var(--warm);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-on-accent: var(--on-accent);
+  --color-scrim: var(--scrim);
+
+  --font-display: var(--font-bricolage), 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: var(--font-plex-sans), 'Segoe UI', system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-2xs: 0.6875rem;
+  --container-page: 76rem;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--cool) 30%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--cool);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  /* Mono "request line" that labels each section with the API call that serves it. */
+  .request-line {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+
+  .page-gutter {
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 640px) {
+    .page-gutter {
+      padding-left: max(2rem, env(safe-area-inset-left, 0px));
+      padding-right: max(2rem, env(safe-area-inset-right, 0px));
+    }
+  }
+
+  /* Long-form text from the CMS (Markdown). */
+  .prose-body {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .prose-body > * + * { margin-top: 1.1em; }
+  .prose-body h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; }
+  .prose-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.6em; }
+  .prose-body a { color: var(--cool); text-underline-offset: 3px; }
+  .prose-body ul { list-style: square; padding-left: 1.25rem; }
+  .prose-body ol { list-style: decimal; padding-left: 1.25rem; }
+  .prose-body li + li { margin-top: 0.4em; }
+  .prose-body li::marker { color: var(--faint); }
+  .prose-body strong { font-weight: 600; }
+  .prose-body code { font-family: var(--font-mono); font-size: 0.88em; background: var(--raised); padding: 0.1em 0.35em; border-radius: 3px; }
+  .prose-body pre { font-family: var(--font-mono); font-size: 0.85rem; background: var(--surface); border: 1px solid var(--line); padding: 1rem; overflow-x: auto; }
+  .prose-body pre code { background: none; padding: 0; }
+  .prose-body blockquote { border-left: 3px solid var(--warm); padding-left: 1rem; color: var(--muted); }
+}
+
+/* Hero load sequence: the two gel edges draw up the portrait, then the headline settles. */
+@keyframes gel-draw {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes rise {
+  from { opacity: 0.001; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .animate-gel { transform-origin: bottom; animation: gel-draw 700ms var(--ease-out-soft) both; }
+  .animate-rise { animation: rise 600ms var(--ease-out-soft) both; }
+}
+
+/* Swap themes in one frame instead of animating every colour transition at once. */
+[data-theme-switching] *,
+[data-theme-switching] *::before,
+[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+/* Hairline grids: borders drawn by the cells, so an incomplete last row leaves empty page, not a grey block. */
+@layer components {
+  .hairline-grid {
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .hairline-grid > * {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+}

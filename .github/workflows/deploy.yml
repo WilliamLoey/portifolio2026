@@ -1,0 +1,92 @@
+name: Deploy
+
+# main → production. Pull requests → preview (separate database branch).
+# Order matters: CI must pass, migrations run before the API ships, the API ships before the site.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.event_name == 'pull_request' && github.head_ref || 'production' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  NODE_VERSION: 22
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: ${{ github.event_name == 'pull_request' && 'Preview' || 'Production' }}
+    needs: ci
+    # Forks and Dependabot have no access to secrets: skip instead of failing.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Separate GitHub environments hold separate secrets (database URLs, tokens).
+    # Add required reviewers to "production" for a manual approval step.
+    environment: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+    env:
+      TARGET: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+      PROD_FLAG: ${{ github.event_name == 'pull_request' && '' || '--prod' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}', cache: npm }
+      - run: npm ci
+      - run: npm install --global vercel@latest
+
+      - name: Apply database migrations
+        working-directory: apps/api
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npx prisma migrate deploy
+
+      - name: Deploy API
+        id: api
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel pull --yes --environment=$TARGET --token=$VERCEL_TOKEN --cwd apps/api
+          vercel build $PROD_FLAG --token=$VERCEL_TOKEN --cwd apps/api
+          url=$(vercel deploy --prebuilt $PROD_FLAG --token=$VERCEL_TOKEN --cwd apps/api)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Smoke-test the API
+        run: |
+          base="${{ vars.API_HEALTH_URL || format('{0}/api/v1/health', steps.api.outputs.url) }}"
+          for i in 1 2 3 4 5 6; do curl -fsS "$base" && exit 0; sleep 5; done
+          echo "::error::API health check failed at $base"; exit 1
+
+      - name: Deploy site
+        id: web
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel pull --yes --environment=$TARGET --token=$VERCEL_TOKEN --cwd apps/web
+          vercel build $PROD_FLAG --token=$VERCEL_TOKEN --cwd apps/web
+          url=$(vercel deploy --prebuilt $PROD_FLAG --token=$VERCEL_TOKEN --cwd apps/web)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URLs
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: `Preview deployed\n\n- Site: ${{ steps.web.outputs.url }}\n- API: ${{ steps.api.outputs.url }}/api/v1/docs`,
+            });

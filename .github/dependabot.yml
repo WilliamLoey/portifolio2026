@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    groups:
+      nestjs: { patterns: ['@nestjs/*'] }
+      prisma: { patterns: ['prisma', '@prisma/*'] }
+      next: { patterns: ['next', 'next-intl', 'react', 'react-dom', '@types/react*'] }
+      testing: { patterns: ['jest', 'ts-jest', 'vitest', '@vitest/*', '@playwright/*', '@testing-library/*'] }
+      lint: { patterns: ['eslint', '@eslint/*', 'typescript-eslint', 'eslint-plugin-*', '@next/eslint-plugin-next'] }
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }
+  - package-ecosystem: docker
+    directories: ['/apps/api', '/apps/web']
+    schedule: { interval: monthly }

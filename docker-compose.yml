@@ -1,0 +1,91 @@
+# Infrastructure only (PostgreSQL + Mailpit):      docker compose up -d
+# Full stack in containers (adds API + web):        docker compose --profile app up --build
+#
+# Site       http://localhost:3000   (dashboard at /dashboard)
+# API        http://localhost:3333/api/v1/health   (docs at /api/v1/docs)
+# Fake inbox http://localhost:8025   (every contact-form email lands here)
+
+name: portfolio
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: portfolio
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio -d portfolio"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  api:
+    profiles: [app]
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: portfolio-api:local
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      PUBLIC_API_URL: http://localhost:3333
+      CORS_ORIGINS: http://localhost:3000
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres:5432/portfolio?schema=public
+      DIRECT_URL: postgresql://portfolio:portfolio@postgres:5432/portfolio?schema=public
+      # Local-only secrets. Production values live in the hosting provider, never in git.
+      IP_HASH_SALT: docker-local-salt-0123456789abcdef0123456789
+      REVALIDATE_SECRET: docker-local-revalidate-secret-0123456789abcdef
+      WEB_REVALIDATE_URL: http://web:3000/api/revalidate
+      STORAGE_DRIVER: local
+      MAIL_DRIVER: smtp
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      MAIL_FROM: "Portfolio <portfolio@localhost>"
+      MAIL_TO: ${MAIL_TO:-you@example.com}
+    ports:
+      - "3333:3333"
+    volumes:
+      - uploads:/repo/apps/api/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  web:
+    profiles: [app]
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3333/api/v1
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    image: portfolio-web:local
+    restart: unless-stopped
+    environment:
+      API_URL: http://api:3333/api/v1
+      REVALIDATE_SECRET: docker-local-revalidate-secret-0123456789abcdef
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "title": "William Van Loey · Ingénieur logiciel orienté backend",
+    "description": "Ingénieur full-stack orienté backend à Bruxelles. API, IA et automatisation des processus numériques. Travaille en portugais, en français et en anglais.",
+    "workTitle": "Projets",
+    "workDescription": "Projets et études de cas de William Van Loey.",
+    "aboutTitle": "À propos",
+    "aboutDescription": "Parcours, expérience, formation et langues de William Van Loey.",
+    "colophonTitle": "Comment ce site est construit",
+    "colophonDescription": "Architecture, choix techniques et outils derrière ce portfolio et son CMS."
+  },
+  "nav": {
+    "work": "Projets",
+    "about": "À propos",
+    "contact": "Contact",
+    "colophon": "Colophon",
+    "skip": "Aller au contenu",
+    "menu": "Menu",
+    "close": "Fermer le menu",
+    "language": "Langue",
+    "theme": "Changer de thème",
+    "home": "Accueil"
+  },
+  "hero": {
+    "available": "Ouvert aux opportunités",
+    "localTime": "Heure locale",
+    "speaks": "Langues",
+    "now": "Actuellement",
+    "ctaWork": "Voir les projets",
+    "ctaContact": "Me contacter",
+    "emptyTitle": "Portfolio en préparation",
+    "emptyText": "Le contenu arrive bientôt. En attendant, vous pouvez déjà m’envoyer un message."
+  },
+  "work": {
+    "title": "Projets choisis",
+    "allTitle": "Tous les projets",
+    "lead": "Des projets présentés par le problème à résoudre, leur construction et leur résultat.",
+    "all": "Tous",
+    "viewAll": "Tous les projets",
+    "empty": "Les études de cas sont en cours de rédaction. Revenez bientôt.",
+    "featured": "À la une",
+    "read": "Lire l’étude de cas",
+    "code": "Code",
+    "live": "En ligne",
+    "filter": "Filtrer par catégorie",
+    "count": "{count, plural, =0 {Aucun projet} one {# projet} other {# projets}}"
+  },
+  "project": {
+    "back": "Tous les projets",
+    "role": "Rôle",
+    "year": "Année",
+    "category": "Catégorie",
+    "stack": "Technologies",
+    "links": "Liens",
+    "outcome": "Résultat",
+    "repository": "Code source",
+    "liveSite": "Site en ligne",
+    "fallback": "Cette étude de cas n’est pas encore traduite. Vous lisez la version en {language}.",
+    "next": "Un problème similaire à résoudre ?",
+    "nextCta": "Parlons-en"
+  },
+  "capabilities": {
+    "title": "Ce sur quoi je travaille",
+    "apis": {
+      "title": "API et architecture backend",
+      "text": "Des contrats typés, des frontières nettes entre domaine et infrastructure, et des services qui restent faciles à faire évoluer."
+    },
+    "automation": {
+      "title": "IA et automatisation des processus",
+      "text": "Transformer des processus métier répétitifs en flux automatisés fiables."
+    },
+    "languages": {
+      "title": "Entre langues et cultures",
+      "text": "Une formation en relations internationales et un travail quotidien en portugais, en français et en anglais."
+    }
+  },
+  "experience": {
+    "title": "Expérience",
+    "present": "Aujourd’hui",
+    "empty": "Les détails de l’expérience sont en cours d’ajout.",
+    "types": {
+      "full_time": "Temps plein",
+      "part_time": "Temps partiel",
+      "contract": "Contrat",
+      "freelance": "Freelance",
+      "internship": "Stage"
+    }
+  },
+  "stack": {
+    "title": "Outils",
+    "lead": "Les outils que j’utilise pour mener un produit de la base de données à la mise en production.",
+    "groups": {
+      "language": "Langages",
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "data": "Données",
+      "cloud": "Cloud",
+      "devops": "DevOps",
+      "testing": "Tests",
+      "ai": "IA et automatisation",
+      "other": "Autres"
+    }
+  },
+  "education": {
+    "title": "Formation",
+    "status": {
+      "in_progress": "En cours",
+      "completed": "Terminé",
+      "discontinued": "Non terminé"
+    }
+  },
+  "languages": {
+    "title": "Langues",
+    "levels": {
+      "native": "Langue maternelle",
+      "full_professional": "Capacité professionnelle complète",
+      "professional": "Capacité professionnelle",
+      "limited": "Capacité professionnelle limitée",
+      "elementary": "Notions"
+    }
+  },
+  "certifications": {
+    "title": "Apprentissage et certificats",
+    "credential": "Identifiant {id}",
+    "verify": "Vérifier"
+  },
+  "about": {
+    "title": "À propos",
+    "lead": "Parcours, expérience et langues de travail."
+  },
+  "contact": {
+    "title": "Parlons-en",
+    "lead": "Vous recrutez pour un poste backend ou full-stack, ou vous avez besoin d’aide pour une API ou une automatisation ? Écrivez en français, en anglais ou en portugais.",
+    "emailLabel": "Ou par e-mail",
+    "copy": "Copier",
+    "copied": "Copié",
+    "name": "Nom",
+    "email": "E-mail",
+    "subject": "Objet",
+    "message": "Message",
+    "send": "Envoyer le message",
+    "sending": "Envoi…",
+    "success": "Merci, votre message est bien parti. Je réponds en général sous deux jours ouvrables.",
+    "error": "Le message n’a pas pu être envoyé. Réessayez, ou écrivez-moi directement.",
+    "rateLimited": "Trop de messages depuis cette connexion. Réessayez dans quelques minutes.",
+    "another": "Envoyer un autre message",
+    "honeypot": "Laissez ce champ vide",
+    "errors": {
+      "name": { "min": "Indiquez votre nom.", "max": "100 caractères maximum." },
+      "email": { "invalid": "Indiquez une adresse e-mail valide.", "max": "200 caractères maximum." },
+      "subject": { "min": "Ajoutez un objet court.", "max": "150 caractères maximum." },
+      "message": { "min": "Écrivez au moins 20 caractères.", "max": "5 000 caractères maximum." }
+    }
+  },
+  "colophon": {
+    "title": "Comment ce site est construit",
+    "lead": "Ce portfolio est aussi un produit qui fonctionne : un site public, une API REST et un CMS privé. Voici comment les pièces s’assemblent.",
+    "architectureTitle": "Architecture",
+    "architecture": "Un site Next.js et une API NestJS, tous deux sur Vercel, avec PostgreSQL chez Neon et les images dans un stockage objet. Les visiteurs reçoivent des pages pré-rendues ; l’API n’est appelée que pour les reconstruire.",
+    "decisionsTitle": "Choix techniques",
+    "decisions": {
+      "contract": {
+        "title": "Un seul contrat",
+        "text": "Les schémas de requête et de réponse vivent dans un paquet Zod partagé. L’API valide avec lui, le document OpenAPI en est généré, et les formulaires du tableau de bord l’utilisent."
+      },
+      "publishing": {
+        "title": "Brouillon et version publiée",
+        "text": "Chaque élément garde un brouillon modifiable et une copie publiée figée. Les visiteurs ne lisent que la version publiée : les modifications restent invisibles jusqu’à la publication."
+      },
+      "revalidation": {
+        "title": "Pages statiques, rafraîchies à la publication",
+        "text": "Publier envoie une requête signée au site, qui ne reconstruit que les pages concernées. Sans redéploiement."
+      },
+      "security": {
+        "title": "Sécurité par défaut",
+        "text": "Mots de passe Argon2id, sessions opaques côté serveur dans des cookies httpOnly, limites de débit partagées entre instances serverless, et fichiers vérifiés par leur contenu plutôt que par leur nom."
+      },
+      "architecture": {
+        "title": "Clean Architecture, sans excès",
+        "text": "Les cas d’usage dépendent de ports. Prisma, le stockage et l’e-mail sont des adaptateurs remplaçables sans toucher aux règles métier."
+      },
+      "testing": {
+        "title": "Testé avant chaque déploiement",
+        "text": "Tests unitaires, d’intégration (sur un vrai PostgreSQL) et de bout en bout exécutés dans GitHub Actions avant chaque déploiement."
+      }
+    },
+    "stackTitle": "Outils",
+    "source": "Lire le code sur GitHub",
+    "api": "Parcourir la documentation de l’API"
+  },
+  "preview": {
+    "banner": "Aperçu de modifications non publiées. Les visiteurs ne voient pas cette version.",
+    "back": "Retour à l’éditeur"
+  },
+  "notFound": {
+    "title": "Cette page n’existe pas",
+    "text": "Le lien est peut-être ancien, ou le projet a été déplacé.",
+    "home": "Aller à l’accueil"
+  },
+  "footer": {
+    "builtWith": "Conçu et développé par William Van Loey. Next.js, NestJS et PostgreSQL.",
+    "colophon": "Comment ce site est construit",
+    "top": "Retour en haut"
+  }
+}

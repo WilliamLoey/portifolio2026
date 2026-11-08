@@ -1,0 +1,155 @@
+name: CI
+
+# Every push and pull request: lint → types → unit → integration (real PostgreSQL)
+# → end-to-end (API + site + Playwright) → production builds (incl. Docker images).
+# No secrets are used here: forks and Dependabot PRs run the same checks.
+# Triggered by deploy.yml (every push and pull request), so it runs once per change.
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  quality:
+    name: Lint · Types · Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}', cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3333/api/v1
+      - name: Unit tests (contracts, API use cases, web components)
+        run: npm test
+
+  integration:
+    name: API integration · migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_USER: portfolio, POSTGRES_PASSWORD: portfolio, POSTGRES_DB: portfolio }
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U portfolio" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio
+      DATABASE_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio
+      DIRECT_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}', cache: npm }
+      - run: npm ci
+      - name: Fail if schema.prisma changed without a migration
+        working-directory: apps/api
+        env: { PGPASSWORD: portfolio }
+        run: |
+          psql -h localhost -U portfolio -d portfolio -c 'CREATE DATABASE shadow'
+          npx prisma migrate diff \
+            --from-migrations prisma/migrations \
+            --to-schema-datamodel prisma/schema.prisma \
+            --shadow-database-url postgresql://portfolio:portfolio@localhost:5432/shadow \
+            --exit-code || { echo "::error::schema.prisma changed without a migration. Run: npm run db:migrate"; exit 1; }
+      - name: HTTP + database tests (Supertest)
+        run: npm run test:integration
+
+  e2e:
+    name: End-to-end (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_USER: portfolio, POSTGRES_PASSWORD: portfolio, POSTGRES_DB: portfolio }
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U portfolio" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      # API
+      NODE_ENV: test
+      PUBLIC_API_URL: http://localhost:3333
+      CORS_ORIGINS: http://localhost:3000
+      DATABASE_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio
+      DIRECT_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio
+      IP_HASH_SALT: ci-salt-0123456789abcdef0123456789abcdef
+      STORAGE_DRIVER: local
+      MAIL_DRIVER: log
+      MAIL_FROM: Portfolio <ci@example.com>
+      MAIL_TO: ci@example.com
+      WEB_REVALIDATE_URL: http://localhost:3000/api/revalidate
+      REVALIDATE_SECRET: ci-revalidate-secret-0123456789abcdef0123
+      # Web
+      API_URL: http://localhost:3333/api/v1
+      NEXT_PUBLIC_API_URL: http://localhost:3333/api/v1
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      # Test account (CI database only)
+      ADMIN_PASSWORD: ci-admin-password-long-enough
+      E2E_ADMIN_EMAIL: admin@example.com
+      E2E_ADMIN_PASSWORD: ci-admin-password-long-enough
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}', cache: npm }
+      - run: npm ci
+      - run: npm run build:contracts
+      - name: Migrate, seed and create the test admin
+        working-directory: apps/api
+        run: |
+          npx prisma migrate deploy
+          npm run seed
+          node dist/cli/create-admin.js --email "$E2E_ADMIN_EMAIL" --name "CI Admin"
+      - name: Start the API
+        working-directory: apps/api
+        run: |
+          node dist/main.js > api.log 2>&1 &
+          npx wait-on -t 60000 http://localhost:3333/api/v1/health
+      - name: Build and start the site
+        working-directory: apps/web
+        run: |
+          npm run build
+          npx next start --port 3000 > web.log 2>&1 &
+          npx wait-on -t 60000 http://localhost:3000/en
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: npm run test:e2e
+        env: { CI: 'true' }
+      - name: Upload report and server logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+            apps/api/api.log
+            apps/web/web.log
+          retention-days: 7
+
+  docker:
+    name: Docker · ${{ matrix.app }}
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        app: [api, web]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/${{ matrix.app }}/Dockerfile
+          push: false
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}

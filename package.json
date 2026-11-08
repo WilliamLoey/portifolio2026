@@ -1,0 +1,41 @@
+{
+  "name": "william-van-loey-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/contracts",
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "build:contracts": "npm run build -w @portfolio/contracts",
+    "dev:contracts": "npm run dev -w @portfolio/contracts",
+    "dev:api": "npm run start:dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "build": "npm run build:contracts && npm run build -w apps/api && npm run build -w apps/web",
+    "typecheck": "npm run build:contracts && npm run typecheck -w @portfolio/contracts && npm run typecheck -w apps/api && npm run typecheck -w apps/web",
+    "test": "npm run build:contracts && npm test -w @portfolio/contracts && npm test -w apps/api && npm test -w apps/web",
+    "db:up": "docker compose up -d",
+    "db:migrate": "npm run prisma:migrate -w apps/api",
+    "db:seed": "npm run seed -w apps/api",
+    "admin:create": "npm run admin:create -w apps/api --",
+    "lint": "eslint .",
+    "db:lite": "pglite-server --db=.pglite --port=5433 --max-connections=4",
+    "test:integration": "npm run build:contracts && npm run test:integration -w apps/api",
+    "test:e2e": "npm run test:e2e -w apps/web"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@electric-sql/pglite-socket": "^0.2.18",
+    "@eslint/js": "^9.39.5",
+    "@next/eslint-plugin-next": "^16.4.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "typescript-eslint": "^8.72.1",
+    "wait-on": "^9.5.1"
+  }
+}
