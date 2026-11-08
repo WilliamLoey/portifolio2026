@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 # Build context: repository root  →  docker build -f apps/web/Dockerfile .
 
-FROM node:22-alpine AS base
+FROM node:25-alpine AS base
 WORKDIR /repo
 ENV NEXT_TELEMETRY_DISABLED=1 NPM_CONFIG_UPDATE_NOTIFIER=false NPM_CONFIG_FUND=false NPM_CONFIG_AUDIT=false
 
