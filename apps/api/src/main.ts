@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+// Vercel's NestJS preset only accepts an entry file that imports @nestjs/core.
+import '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { createApp } from './bootstrap';
 import { EnvService } from './infrastructure/config/env.service';
